@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_org.wso2.carbon.student.mgt" default="compile.module.org.wso2.carbon.student.mgt">
+  <dirname property="module.org.wso2.carbon.student.mgt.basedir" file="${ant.file.module_org.wso2.carbon.student.mgt}"/>
+  
+  <property name="module.jdk.home.org.wso2.carbon.student.mgt" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.org.wso2.carbon.student.mgt" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.org.wso2.carbon.student.mgt" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.org.wso2.carbon.student.mgt" value="-encoding UTF-8 -source 1.6 ${compiler.args}"/>
+  
+  <property name="org.wso2.carbon.student.mgt.output.dir" value="${module.org.wso2.carbon.student.mgt.basedir}/target/classes"/>
+  <property name="org.wso2.carbon.student.mgt.testoutput.dir" value="${module.org.wso2.carbon.student.mgt.basedir}/target/test-classes"/>
+  
+  <path id="org.wso2.carbon.student.mgt.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="org.wso2.carbon.student.mgt.module.production.classpath">
+    <path refid="${module.jdk.classpath.org.wso2.carbon.student.mgt}"/>
+  </path>
+  
+  <path id="org.wso2.carbon.student.mgt.runtime.production.module.classpath">
+    <pathelement location="${org.wso2.carbon.student.mgt.output.dir}"/>
+  </path>
+  
+  <path id="org.wso2.carbon.student.mgt.module.classpath">
+    <path refid="${module.jdk.classpath.org.wso2.carbon.student.mgt}"/>
+    <pathelement location="${org.wso2.carbon.student.mgt.output.dir}"/>
+  </path>
+  
+  <path id="org.wso2.carbon.student.mgt.runtime.module.classpath">
+    <pathelement location="${org.wso2.carbon.student.mgt.testoutput.dir}"/>
+    <pathelement location="${org.wso2.carbon.student.mgt.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.org.wso2.carbon.student.mgt">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.org.wso2.carbon.student.mgt">
+    <patternset refid="excluded.from.module.org.wso2.carbon.student.mgt"/>
+  </patternset>
+  
+  <path id="org.wso2.carbon.student.mgt.module.sourcepath">
+    <dirset dir="${module.org.wso2.carbon.student.mgt.basedir}">
+      <include name="src/main/java"/>
+      <include name="src/main/resources"/>
+    </dirset>
+  </path>
+  
+  <path id="org.wso2.carbon.student.mgt.module.test.sourcepath">
+    <dirset dir="${module.org.wso2.carbon.student.mgt.basedir}">
+      <include name="src/test/java"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.org.wso2.carbon.student.mgt" depends="compile.module.org.wso2.carbon.student.mgt.production,compile.module.org.wso2.carbon.student.mgt.tests" description="Compile module org.wso2.carbon.student.mgt"/>
+  
+  <target name="compile.module.org.wso2.carbon.student.mgt.production" depends="register.custom.compilers" description="Compile module org.wso2.carbon.student.mgt; production classes">
+    <mkdir dir="${org.wso2.carbon.student.mgt.output.dir}"/>
+    <javac2 destdir="${org.wso2.carbon.student.mgt.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.org.wso2.carbon.student.mgt}/javac">
+      <compilerarg line="${compiler.args.org.wso2.carbon.student.mgt}"/>
+      <bootclasspath refid="org.wso2.carbon.student.mgt.module.bootclasspath"/>
+      <classpath refid="org.wso2.carbon.student.mgt.module.production.classpath"/>
+      <src refid="org.wso2.carbon.student.mgt.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.org.wso2.carbon.student.mgt"/>
+    </javac2>
+    
+    <copy todir="${org.wso2.carbon.student.mgt.output.dir}">
+      <fileset dir="${module.org.wso2.carbon.student.mgt.basedir}/src/main/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.org.wso2.carbon.student.mgt.basedir}/src/main/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.org.wso2.carbon.student.mgt.tests" depends="register.custom.compilers,compile.module.org.wso2.carbon.student.mgt.production" description="compile module org.wso2.carbon.student.mgt; test classes" unless="skip.tests">
+    <mkdir dir="${org.wso2.carbon.student.mgt.testoutput.dir}"/>
+    <javac2 destdir="${org.wso2.carbon.student.mgt.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.org.wso2.carbon.student.mgt}/javac">
+      <compilerarg line="${compiler.args.org.wso2.carbon.student.mgt}"/>
+      <bootclasspath refid="org.wso2.carbon.student.mgt.module.bootclasspath"/>
+      <classpath refid="org.wso2.carbon.student.mgt.module.classpath"/>
+      <src refid="org.wso2.carbon.student.mgt.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.org.wso2.carbon.student.mgt"/>
+    </javac2>
+    
+    <copy todir="${org.wso2.carbon.student.mgt.testoutput.dir}">
+      <fileset dir="${module.org.wso2.carbon.student.mgt.basedir}/src/test/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.org.wso2.carbon.student.mgt" description="cleanup module">
+    <delete dir="${org.wso2.carbon.student.mgt.output.dir}"/>
+    <delete dir="${org.wso2.carbon.student.mgt.testoutput.dir}"/>
+  </target>
+</project>
